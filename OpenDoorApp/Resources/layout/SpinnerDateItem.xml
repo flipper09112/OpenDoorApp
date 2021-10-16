@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:id="@+id/dateLabel"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:gravity="center"
+    android:fontFamily="@font/arista_pro_light"
+    android:autoSizeTextType="uniform"
+    android:text="12/12/2020"/>
+

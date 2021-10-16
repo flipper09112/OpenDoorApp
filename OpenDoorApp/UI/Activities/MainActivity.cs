@@ -7,12 +7,19 @@ using AndroidX.AppCompat.Widget;
 using AndroidX.AppCompat.App;
 using Google.Android.Material.FloatingActionButton;
 using Google.Android.Material.Snackbar;
+using Android.Widget;
+using Toolbar = AndroidX.AppCompat.Widget.Toolbar;
+using AppCompatActivity = AndroidX.AppCompat.App.AppCompatActivity;
+using OpenDoorApp.Helpers;
+using OpenDoorApp.UI.Fragments;
 
 namespace OpenDoorApp
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
     public class MainActivity : AppCompatActivity
     {
+        private FrameLayout _frame;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -22,32 +29,40 @@ namespace OpenDoorApp
             Toolbar toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
             SetSupportActionBar(toolbar);
 
-            FloatingActionButton fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
-            fab.Click += FabOnClick;
+            _frame = FindViewById<FrameLayout>(Resource.Id.fragmentContainer);
+
+            FragmentsHelper.ShowFragment(this, new HomepageFragment());
         }
 
-        public override bool OnCreateOptionsMenu(IMenu menu)
-        {
-            MenuInflater.Inflate(Resource.Menu.menu_main, menu);
-            return true;
-        }
+        /* public override bool OnCreateOptionsMenu(IMenu menu)
+         {
+             MenuInflater.Inflate(Resource.Menu.menu_main, menu);
+             return true;
+         }
 
-        public override bool OnOptionsItemSelected(IMenuItem item)
+         public override bool OnOptionsItemSelected(IMenuItem item)
+         {
+             int id = item.ItemId;
+             if (id == Resource.Id.action_settings)
+             {
+                 return true;
+             }
+
+             return base.OnOptionsItemSelected(item);
+         }*/
+
+        public override void OnBackPressed()
         {
-            int id = item.ItemId;
-            if (id == Resource.Id.action_settings)
+            Fragment frag = FragmentManager.FindFragmentById(Resource.Id.fragmentContainer);
+
+            if(frag is HomepageFragment)
             {
-                return true;
+                //ignore
             }
-
-            return base.OnOptionsItemSelected(item);
-        }
-
-        private void FabOnClick(object sender, EventArgs eventArgs)
-        {
-            View view = (View) sender;
-            Snackbar.Make(view, "Replace with your own action", Snackbar.LengthLong)
-                .SetAction("Action", (View.IOnClickListener)null).Show();
+            else
+            {
+                base.OnBackPressed();
+            }
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
