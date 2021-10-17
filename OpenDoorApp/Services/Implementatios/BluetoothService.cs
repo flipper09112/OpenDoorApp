@@ -31,6 +31,7 @@ namespace OpenDoorApp.Services
         private Stream _mmOutputStream;
         private Stream _mmInputStream;
         private Thread _workerPingThread;
+        private string _deviceName;
         private Action<bool> _updateConnected;
         private Action _somethingWrongAction;
         private Action<string> _showDataReceived;
@@ -42,6 +43,7 @@ namespace OpenDoorApp.Services
 
 		public void Ping(string deviceName, Action<bool> updateConnected, Action somethingWrongAction, Action<string> showDataReceived)
         {
+			_deviceName = deviceName;
 			_updateConnected = updateConnected;
 			_somethingWrongAction = somethingWrongAction;
 			_showDataReceived = showDataReceived;
@@ -49,13 +51,12 @@ namespace OpenDoorApp.Services
 			FindBT(deviceName);
 			OpenBT(updateConnected);
 
+			StartPingRequests();
 			StartServer();
-        }
+		}
 
-        private void StartPingRequests()
+		private void StartPingRequests()
         {
-			Handler handler = new Handler();
-
 			_stopPingWorker = false;
 			_workerPingThread = new Thread(Ping);
 
@@ -64,7 +65,6 @@ namespace OpenDoorApp.Services
 
         private void StartServer()
 		{
-			Handler handler = new Handler();
 			_stopWorker = false;
 			_readBufferPosition = 0;
 			_readBuffer = new byte[1024];
@@ -82,17 +82,7 @@ namespace OpenDoorApp.Services
         private void FindBT(string deviceName)
         {
 			_mBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
-			if (_mBluetoothAdapter == null)
-			{
-				//myLabel.setText("No bluetooth adapter available");
-			}
-
-			if (!_mBluetoothAdapter.IsEnabled)
-			{
-				//Intent enableBluetooth = new Intent(BluetoothAdapter.ActionRequestEnable);
-				//StartActivityForResult(enableBluetooth, 0);
-			}
-
+			
 			var pairedDevices = _mBluetoothAdapter.BondedDevices;
 			_mmDevice = _mBluetoothAdapter.BondedDevices.First(item => item.Name == deviceName);
 			if (pairedDevices.Contains(_mmDevice))
@@ -118,11 +108,16 @@ namespace OpenDoorApp.Services
 					_mmSocket.Connect();
 
 					updateConnected.Invoke(true);
-					StartPingRequests();
 				}
-				catch (System.Exception e) { }
+				catch (RuntimeException ex) {
+					//Log.Debug("BluetoothService", ex.StackTrace);
+				}
+				catch (System.Exception e)
+				{
+					Log.Debug("BluetoothService", e.StackTrace);
+				}
 
-				Task.Delay(1000);
+				//Task.Delay(1000);
 			}
 
 
@@ -157,7 +152,7 @@ namespace OpenDoorApp.Services
 								_sendPing = false;
 							}
 
-							Log.Debug("BluetoothService", "Receive => " + data);
+							Console.WriteLine("BluetoothService", "Receive => " + data);
 							
 							_readBufferPosition = 0;
 						}
@@ -170,29 +165,40 @@ namespace OpenDoorApp.Services
 			}
 		}
 
-		private void Ping()
+		private async void Ping()
 		{
 			while (!Thread.CurrentThread().IsInterrupted && !_stopPingWorker)
 			{
+				if (!_mmSocket.IsConnected) continue;
 				try
 				{
 					_sendPing = true;
-					SendCommand(PingCommand);
-					Task.Delay(2500);
-					Log.Debug("BluetoothService", "Ping");
 
+					Log.Debug("BluetoothService", "Ping Sended");
+					SendCommand(PingCommand);
+					await Task.Delay(2500);
+
+					Log.Debug("BluetoothService", "Ping check response");
 					if (_data == "ping")
                     {
-						_updateConnected.Invoke(true);
+						//_updateConnected.Invoke(true);
 					}
-					else
+					else if(_data == null)
 					{
+						//error here
+						_mmInputStream.Close();
+						_mmOutputStream.Close();
+
 						_updateConnected.Invoke(false); 
 						_stopWorker = true;
+						_stopPingWorker = true;
+						//Ping(_deviceName, )
 					}
+					_data = null;
 				}
 				catch (IOException ex)
 				{
+					//_somethingWrongAction?.Invoke();
 					//_stopWorker = true;
 				}
 			}

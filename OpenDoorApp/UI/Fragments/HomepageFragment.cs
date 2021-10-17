@@ -30,6 +30,7 @@ namespace OpenDoorApp.UI.Fragments
         private HomeSpinnerAdapter _spinnerAdapter;
 
         public static string LastDeviceSelected = "LastDeviceSelectedKey";
+        private bool _notFoundDevice;
 
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -68,6 +69,7 @@ namespace OpenDoorApp.UI.Fragments
 
         private void StartBTConnection()
         {
+            if (_notFoundDevice) return;
             Task.Run(() => { _bluetoothService.Ping(_spinnerAdapter[0], UpdateConnectedInfo, SomethingWrong, ShowDataReceived); });
         }
 
@@ -108,7 +110,7 @@ namespace OpenDoorApp.UI.Fragments
 
         private void ShowDataReceived(string data)
         {
-            Activity.RunOnUiThread(() => { Toast.MakeText(Context, data, ToastLength.Long).Show(); });
+           // Activity.RunOnUiThread(() => { Toast.MakeText(Context, data, ToastLength.Long).Show(); });
         }
 
         private void BtDevicesSpinnerItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
@@ -143,6 +145,14 @@ namespace OpenDoorApp.UI.Fragments
             if(Preferences.Get(LastDeviceSelected, string.Empty) != string.Empty)
             {
                 int pos = s.IndexOf(Preferences.Get(LastDeviceSelected, string.Empty));
+
+                if (pos == -1)
+                {
+                    _notFoundDevice = true;
+                    return s;
+                }
+
+                _notFoundDevice = false;
 
                 var first = s[0];
                 s[0] = s[pos];

@@ -12,10 +12,11 @@ using Toolbar = AndroidX.AppCompat.Widget.Toolbar;
 using AppCompatActivity = AndroidX.AppCompat.App.AppCompatActivity;
 using OpenDoorApp.Helpers;
 using OpenDoorApp.UI.Fragments;
+using Android.Bluetooth;
 
 namespace OpenDoorApp
 {
-    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
+    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true, ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
     public class MainActivity : AppCompatActivity
     {
         private FrameLayout _frame;
@@ -31,7 +32,24 @@ namespace OpenDoorApp
 
             _frame = FindViewById<FrameLayout>(Resource.Id.fragmentContainer);
 
-            FragmentsHelper.ShowFragment(this, new HomepageFragment());
+            FragmentsHelper.ShowFragment(this, GetFirstFragment());
+        }
+
+        private Fragment GetFirstFragment()
+        {
+            var _mBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
+
+            if (_mBluetoothAdapter == null)
+            {
+                //myLabel.setText("No bluetooth adapter available");
+            }
+
+            if (!_mBluetoothAdapter.IsEnabled)
+            {
+                //return new TurnOnBluetoothFragment();
+            }
+
+            return new HomepageFragment();
         }
 
         /* public override bool OnCreateOptionsMenu(IMenu menu)

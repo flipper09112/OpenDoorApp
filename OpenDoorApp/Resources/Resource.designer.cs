@@ -5673,6 +5673,9 @@ namespace OpenDoorApp
 			// aapt resource value: 0x7F0C003C
 			public const int support_simple_spinner_dropdown_item = 2131492924;
 			
+			// aapt resource value: 0x7F0C003D
+			public const int TurnOnBluetoothFragment = 2131492925;
+			
 			static Layout()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
