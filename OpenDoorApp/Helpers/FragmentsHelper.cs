@@ -13,11 +13,14 @@ namespace OpenDoorApp.Helpers
 {
     public static class FragmentsHelper
     {
-        public static void ShowFragment(this Activity activity, Fragment fragment)
+        public static void ShowFragment(this Activity activity, Fragment fragment, string addToBackStackStr = null)
         {
             FragmentTransaction transaction = activity.FragmentManager.BeginTransaction();
             transaction.Replace(Resource.Id.fragmentContainer, fragment);
-            transaction.AddToBackStack(null);
+           
+            if(addToBackStackStr != null)
+                transaction.AddToBackStack(null);
+            
             transaction.Commit();
         }
     }

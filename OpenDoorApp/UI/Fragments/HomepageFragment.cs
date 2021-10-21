@@ -6,7 +6,10 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
+using AndroidX.ConstraintLayout.Widget;
 using Autofac;
+using Com.Airbnb.Lottie;
+using OpenDoorApp.Helpers;
 using OpenDoorApp.Services;
 using OpenDoorApp.Services.Interfaces;
 using OpenDoorApp.UI.Adapters;
@@ -24,13 +27,14 @@ namespace OpenDoorApp.UI.Fragments
     {
         private IBluetoothService _bluetoothService;
 
-        private Spinner _btDevicesSpinner;
-        private Button _openBtn;
+        private TextView _btDevicesSpinner;
         private ImageView _connectedSignal;
+        private ConstraintLayout _container;
+        private LottieAnimationView _openLottieBtn;
         private HomeSpinnerAdapter _spinnerAdapter;
 
         public static string LastDeviceSelected = "LastDeviceSelectedKey";
-        private bool _notFoundDevice;
+        private bool _doorConnected;
 
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -44,9 +48,13 @@ namespace OpenDoorApp.UI.Fragments
 
             _bluetoothService = App.Container.Resolve<IBluetoothService>();
 
-            _btDevicesSpinner = view.FindViewById<Spinner>(Resource.Id.btDevicesSpinner);
-            _openBtn = view.FindViewById<Button>(Resource.Id.openBtn);
+            _btDevicesSpinner = view.FindViewById<TextView>(Resource.Id.btDevicesSpinner);
             _connectedSignal = view.FindViewById<ImageView>(Resource.Id.connectedSignal);
+            _container = view.FindViewById<ConstraintLayout>(Resource.Id.container);
+            _openLottieBtn = view.FindViewById<LottieAnimationView>(Resource.Id.openLottieBtn);
+
+            _openLottieBtn.SetMaxProgress(0.50f);
+            _openLottieBtn.PlayAnimation();
 
             return view;
         }
@@ -69,19 +77,45 @@ namespace OpenDoorApp.UI.Fragments
 
         private void StartBTConnection()
         {
-            if (_notFoundDevice) return;
-            Task.Run(() => { _bluetoothService.Ping(_spinnerAdapter[0], UpdateConnectedInfo, SomethingWrong, ShowDataReceived); });
+            Task.Run(() => { _bluetoothService.Ping(Preferences.Get(LastDeviceSelected, string.Empty), UpdateConnectedInfo, SomethingWrong, ShowDataReceived); });
         }
 
         private void SetupBindings()
         {
-            _btDevicesSpinner.ItemSelected += BtDevicesSpinnerItemSelected;
-            _openBtn.Click += OpenBtnClick;
+            _openLottieBtn.Click += OpenLottieBtnClick;
         }
         private void CleanBindings()
         {
-            _btDevicesSpinner.ItemSelected -= BtDevicesSpinnerItemSelected;
-            _openBtn.Click -= OpenBtnClick;
+            _openLottieBtn.Click -= OpenLottieBtnClick;
+        }
+
+        private void OpenLottieBtnClick(object sender, EventArgs e)
+        {
+            if(_doorConnected)
+            {
+                _openLottieBtn.Speed = -1 * _openLottieBtn.Speed;
+                _openLottieBtn.SetMinProgress(0.41f);
+                _openLottieBtn.PlayAnimation();
+
+                Vibrate();
+
+                _bluetoothService.SendCommand(_bluetoothService.OpenCommand);
+            }
+        }
+
+        private void Vibrate()
+        {
+            Vibrator v = (Vibrator)Activity.GetSystemService(Context.VibratorService);
+            // Vibrate for 500 milliseconds
+            if (Build.VERSION.SdkInt >= Build.VERSION_CODES.O)
+            {
+                v.Vibrate(VibrationEffect.CreateOneShot(200, VibrationEffect.DefaultAmplitude));
+            }
+            else
+            {
+                //deprecated in API 26 
+                v.Vibrate(200);
+            }
         }
 
         private void UpdateConnectedInfo(bool connected)
@@ -96,7 +130,7 @@ namespace OpenDoorApp.UI.Fragments
                // Activity.RunOnUiThread(() => { Toast.MakeText(Context, "Connect", ToastLength.Long).Show(); });
                 _connectedSignal.SetBackgroundResource(Resource.Drawable.green_circle);
             }
-            Activity.RunOnUiThread(() => { _openBtn.Enabled = connected; });
+            _doorConnected = connected;
         }
 
         private void SomethingWrong()
@@ -104,7 +138,7 @@ namespace OpenDoorApp.UI.Fragments
             Activity.RunOnUiThread(() => { 
                 Toast.MakeText(Context, "Erro", ToastLength.Long).Show();
                 _connectedSignal.SetBackgroundResource(Resource.Drawable.red_circle);
-                _openBtn.Enabled = false;
+                _doorConnected = false;
             });
         }
 
@@ -113,53 +147,10 @@ namespace OpenDoorApp.UI.Fragments
            // Activity.RunOnUiThread(() => { Toast.MakeText(Context, data, ToastLength.Long).Show(); });
         }
 
-        private void BtDevicesSpinnerItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
-        {
-            Preferences.Set(LastDeviceSelected, _spinnerAdapter[e.Position]);
-        }
-
-        private void OpenBtnClick(object sender, EventArgs e)
-        {
-            _bluetoothService.SendCommand(_bluetoothService.OpenCommand);
-        }
-
         private void SetUI()
         {
-            List<string> pairedDevices = GetPairedDevices();
-            _spinnerAdapter = new HomeSpinnerAdapter(pairedDevices);
-            _btDevicesSpinner.Adapter = _spinnerAdapter;
-        }
-
-        private List<string> GetPairedDevices()
-        {
-            BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
-            var pairedDevices = mBluetoothAdapter.BondedDevices; 
-            
-            var s = new List<string>();
-            foreach (var bt in pairedDevices)
-                s.Add(bt.Name);
-
-            if (s.Count == 0)
-                s.Add("Sem Dispositivos");
-
-            if(Preferences.Get(LastDeviceSelected, string.Empty) != string.Empty)
-            {
-                int pos = s.IndexOf(Preferences.Get(LastDeviceSelected, string.Empty));
-
-                if (pos == -1)
-                {
-                    _notFoundDevice = true;
-                    return s;
-                }
-
-                _notFoundDevice = false;
-
-                var first = s[0];
-                s[0] = s[pos];
-                s[pos] = first;
-            }
-
-            return s;
+            _btDevicesSpinner.Text = Preferences.Get(LastDeviceSelected, string.Empty);
+            _container.SetBackgroundDrawable(GradientHelper.GetBackground());
         }
     }
 }

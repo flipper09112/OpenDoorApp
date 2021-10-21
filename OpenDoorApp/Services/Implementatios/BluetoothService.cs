@@ -85,13 +85,6 @@ namespace OpenDoorApp.Services
 			
 			var pairedDevices = _mBluetoothAdapter.BondedDevices;
 			_mmDevice = _mBluetoothAdapter.BondedDevices.First(item => item.Name == deviceName);
-			if (pairedDevices.Contains(_mmDevice))
-			{
-				//myLabel.setText("Bluetooth Device Found, address: " + mmDevice.getAddress());
-				//Log.d("ArduinoBT", "BT is paired");
-			}
-
-			//myLabel.setText("Bluetooth Device Found");
 		}
 
 		private void OpenBT(Action<bool> updateConnected)

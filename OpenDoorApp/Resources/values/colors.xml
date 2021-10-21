@@ -2,5 +2,15 @@
 <resources>
     <color name="colorPrimary">#2c3e50</color>
     <color name="colorPrimaryDark">#1B3147</color>
-    <color name="colorAccent">#3498db</color>
+  <color name="colorAccent">#3498db</color>
+
+  <!--Generated colors-->
+  
+  <color name="LostLove">#e5d7d6</color>
+  <color name="AswadBlack">#19181b</color>
+  <color name="OldDriftwood">#98654e</color>
+  <color name="PersianRed">#cd2e32</color>
+  <color name="OrganzaViolet">#7190d6</color>
+
+  
 </resources>

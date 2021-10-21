@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -9,13 +9,13 @@
     android:id="@+id/container"
     >
 
-
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/turnOnBtn"
         android:layout_width="200dp"
-        android:layout_height="100dp"
-        android:layout_marginBottom="50dp"
-        android:text="   Ligar bluetooth   "
+        android:layout_height="80dp"
+        android:layout_marginBottom="25dp"
+        android:autoSizeMaxTextSize="40sp"
+        android:text="   Selecionar   "
         android:fontFamily="@font/arista_pro_bold"
         android:autoSizeTextType="uniform"
         android:maxLines="1"
@@ -35,7 +35,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.4" />
+        app:layout_constraintVertical_bias="0.35" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/imageView"
@@ -47,22 +47,52 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:lottie_autoPlay="true"
-        app:lottie_fileName="Lotties/enable_bluetooth_lottie.json"
+        app:lottie_fileName="Lotties/select.json"
         app:lottie_loop="true" />
 
-    <TextView
-        android:id="@+id/textView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/devicesList"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="25dp"
+        android:gravity="center"
+        android:textSize="35sp"
+        app:layout_constraintBottom_toTopOf="@+id/dontFindDevice"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:text="Selecione o seu dispositivo"
+        android:fontFamily="@font/arista_pro_bold"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMaxTextSize="35sp"
         android:textSize="35sp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
         android:gravity="center"
-        android:fontFamily="@font/arista_pro_light"
-        android:text="Para poder abrir o seu portal através do seu telemóvel é necessário ligar o bluetooth"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+    <TextView
+        android:id="@+id/dontFindDevice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Não encontro o meu dispositivo"
+        android:fontFamily="@font/arista_pro_light"
+        android:textColor="@color/OrganzaViolet"
+        android:textSize="15sp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/turnOnBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

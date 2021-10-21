@@ -6,6 +6,7 @@ using Android.Views;
 using Android.Widget;
 using Autofac;
 using OpenDoorApp.Services;
+using OpenDoorApp.Services.Implementatios;
 using OpenDoorApp.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -45,6 +46,7 @@ namespace OpenDoorApp
         private static void RegisterServices(ContainerBuilder builder)
         {
             builder.RegisterType<BluetoothService>().As<IBluetoothService>().SingleInstance();
+            builder.RegisterType<OnboardService>().As<IOnboardService>().SingleInstance();
         }
     }
 }

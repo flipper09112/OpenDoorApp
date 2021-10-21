@@ -13,6 +13,11 @@ using AppCompatActivity = AndroidX.AppCompat.App.AppCompatActivity;
 using OpenDoorApp.Helpers;
 using OpenDoorApp.UI.Fragments;
 using Android.Bluetooth;
+using AndroidX.CoordinatorLayout.Widget;
+using Android.Content;
+using Xamarin.Essentials;
+using Autofac;
+using OpenDoorApp.Services.Interfaces;
 
 namespace OpenDoorApp
 {
@@ -20,6 +25,11 @@ namespace OpenDoorApp
     public class MainActivity : AppCompatActivity
     {
         private FrameLayout _frame;
+        private RelativeLayout _containerFragsLayout;
+        private IOnboardService _onboardService;
+        private Toolbar _toolbar;
+
+        public static int EnableBluetoothRequestCode => 1234;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -27,26 +37,53 @@ namespace OpenDoorApp
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
 
-            Toolbar toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
-            SetSupportActionBar(toolbar);
+            _toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
+            SetSupportActionBar(_toolbar);
 
             _frame = FindViewById<FrameLayout>(Resource.Id.fragmentContainer);
+            _containerFragsLayout = FindViewById<RelativeLayout>(Resource.Id.containerFragsLayout);
+
+            _onboardService = App.Container.Resolve<IOnboardService>();
 
             FragmentsHelper.ShowFragment(this, GetFirstFragment());
+        }
+
+        internal void HideToolbar()
+        {
+            CoordinatorLayout.LayoutParams param = (CoordinatorLayout.LayoutParams)_containerFragsLayout.LayoutParameters;
+            param.SetMargins(0,0,0,0);
+            _containerFragsLayout.LayoutParameters = param;
+
+            SupportActionBar.Hide();
+        }
+
+        internal void ShowToolbar()
+        {
+            CoordinatorLayout.LayoutParams param = (CoordinatorLayout.LayoutParams)_containerFragsLayout.LayoutParameters;
+            param.SetMargins(0, 44, 0, 0);
+            _containerFragsLayout.LayoutParameters = param;
+
+            SupportActionBar.Show();
         }
 
         private Fragment GetFirstFragment()
         {
             var _mBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
+            var deviceSelected = Preferences.Get(HomepageFragment.LastDeviceSelected, string.Empty);
 
             if (_mBluetoothAdapter == null)
             {
                 //myLabel.setText("No bluetooth adapter available");
             }
-
-            if (!_mBluetoothAdapter.IsEnabled)
+            
+            if (deviceSelected == string.Empty)
             {
-                //return new TurnOnBluetoothFragment();
+                _onboardService.IsOnboarding = true;
+                return new FirstConnectDoorDeviceFragment();
+            }
+            else if (!_mBluetoothAdapter.IsEnabled)
+            {
+                return new TurnOnBluetoothFragment();
             }
 
             return new HomepageFragment();
@@ -73,7 +110,8 @@ namespace OpenDoorApp
         {
             Fragment frag = FragmentManager.FindFragmentById(Resource.Id.fragmentContainer);
 
-            if(frag is HomepageFragment)
+            if(frag is HomepageFragment 
+               || frag is TurnOnBluetoothFragment)
             {
                 //ignore
             }
@@ -89,5 +127,27 @@ namespace OpenDoorApp
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-	}
+
+        protected override void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Intent data)
+        {
+            base.OnActivityResult(requestCode, resultCode, data);
+
+            Fragment frag = FragmentManager.FindFragmentById(Resource.Id.fragmentContainer);
+            if (EnableBluetoothRequestCode == requestCode)
+            {
+                if(resultCode == Result.Ok)
+                {
+                    if (_onboardService.IsOnboarding)
+                    {
+                        _onboardService.IsOnboarding = false;
+                        FragmentsHelper.ShowFragment(this, new SelectDoorDeviceFragment());
+                    }
+                    else
+                    {
+                        FragmentsHelper.ShowFragment(this, GetFirstFragment());
+                    }
+                }
+            }
+        }
+    }
 }
