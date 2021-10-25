@@ -77,6 +77,7 @@
     <Compile Include="Helpers\GradientHelper.cs" />
     <Compile Include="Services\Implementatios\OnboardService.cs" />
     <Compile Include="Services\Interfaces\IOnboardService.cs" />
+    <Compile Include="Services\Natives\GetBluetoothDevicesReceiver.cs" />
     <Compile Include="UI\Activities\MainActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -84,8 +85,10 @@
     <Compile Include="Services\Interfaces\IBluetoothService.cs" />
     <Compile Include="UI\Adapters\HomeSpinnerAdapter.cs" />
     <Compile Include="UI\Adapters\SelectDoorDeviceAdapter.cs" />
+    <Compile Include="UI\Fragments\Onboard\CloseToDeviceFragment.cs" />
     <Compile Include="UI\Fragments\Onboard\FirstConnectDoorDeviceFragment.cs" />
     <Compile Include="UI\Fragments\HomepageFragment.cs" />
+    <Compile Include="UI\Fragments\Onboard\SearchDevicesToPairFragment.cs" />
     <Compile Include="UI\Fragments\Onboard\SelectDoorDeviceFragment.cs" />
     <Compile Include="UI\Fragments\Onboard\TurnOnBluetoothFragment.cs" />
     <Compile Include="UI\ViewHolders\DeviceItemViewHolder.cs" />
@@ -96,6 +99,8 @@
     <AndroidAsset Include="Assets\Lotties\select.json" />
     <AndroidAsset Include="Assets\Lotties\open_door_button.json" />
     <AndroidAsset Include="Assets\Lotties\automation_gate.json" />
+    <AndroidAsset Include="Assets\Lotties\close_to.json" />
+    <AndroidAsset Include="Assets\Lotties\bluetooth_search.json" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Properties\AndroidManifest.xml" />
     <None Include="Assets\AboutAssets.txt" />
@@ -207,6 +212,16 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\button_disabled.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\CloseToDeviceFragment.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\SearchDevicesToPairFragment.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

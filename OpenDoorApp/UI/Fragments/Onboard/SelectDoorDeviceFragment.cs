@@ -11,6 +11,7 @@ using AndroidX.ConstraintLayout.Widget;
 using AndroidX.RecyclerView.Widget;
 using OpenDoorApp.Helpers;
 using OpenDoorApp.UI.Adapters;
+using OpenDoorApp.UI.Fragments.Onboard;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,7 +60,6 @@ namespace OpenDoorApp.UI.Fragments
         {
             base.OnPause();
 
-            _mainActivity?.ShowToolbar();
             CleanBindings();
         }
 
@@ -87,7 +87,7 @@ namespace OpenDoorApp.UI.Fragments
 
         private void DontFindDeviceClick(object sender, EventArgs e)
         {
-            //TODO: search new devices
+            FragmentsHelper.ShowFragment(Activity, new CloseToDeviceFragment(), nameof(CloseToDeviceFragment));
         }
 
         private void NextBtnClick(object sender, EventArgs e)
@@ -113,7 +113,7 @@ namespace OpenDoorApp.UI.Fragments
         private void SetRecyclerView()
         {
             List<string> pairedDevices = GetPairedDevices();
-            _adapter = new SelectDoorDeviceAdapter(pairedDevices, SelectDevicePosition, this);
+            _adapter = new SelectDoorDeviceAdapter(pairedDevices, SelectDevicePosition, GetSelectDevicePosition);
             _devicesList.SetAdapter(_adapter);
         }
 
@@ -133,6 +133,11 @@ namespace OpenDoorApp.UI.Fragments
         {
             SelectedDevicePosition = pos;
             SetButtonLayout();
+        }
+
+        public int GetSelectDevicePosition()
+        {
+            return SelectedDevicePosition;
         }
     }
 }

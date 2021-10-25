@@ -18,6 +18,7 @@ using Android.Content;
 using Xamarin.Essentials;
 using Autofac;
 using OpenDoorApp.Services.Interfaces;
+using OpenDoorApp.UI.Fragments.Onboard;
 
 namespace OpenDoorApp
 {
@@ -30,6 +31,7 @@ namespace OpenDoorApp
         private Toolbar _toolbar;
 
         public static int EnableBluetoothRequestCode => 1234;
+        public static int EnableLocationRequestCode => 1235;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -110,10 +112,14 @@ namespace OpenDoorApp
         {
             Fragment frag = FragmentManager.FindFragmentById(Resource.Id.fragmentContainer);
 
-            if(frag is HomepageFragment 
-               || frag is TurnOnBluetoothFragment)
+            if(frag is HomepageFragment)
             {
                 //ignore
+            }
+            else if(frag is TurnOnBluetoothFragment)
+            {
+                if(FragmentManager.BackStackEntryCount != 0)
+                    base.OnBackPressed();
             }
             else
             {
@@ -140,12 +146,20 @@ namespace OpenDoorApp
                     if (_onboardService.IsOnboarding)
                     {
                         _onboardService.IsOnboarding = false;
-                        FragmentsHelper.ShowFragment(this, new SelectDoorDeviceFragment());
+                        FragmentsHelper.ShowFragment(this, new SelectDoorDeviceFragment(), nameof(SelectDoorDeviceFragment));
                     }
                     else
                     {
                         FragmentsHelper.ShowFragment(this, GetFirstFragment());
                     }
+                }
+            }
+
+            if (EnableLocationRequestCode == requestCode)
+            {
+                if(frag is SearchDevicesToPairFragment devicesToPairFragment)
+                {
+                    devicesToPairFragment.StartScan();
                 }
             }
         }

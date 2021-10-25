@@ -57,7 +57,7 @@ namespace OpenDoorApp.Services
 
 		private void StartPingRequests()
         {
-			_stopPingWorker = false;
+			 _stopPingWorker = false;
 			_workerPingThread = new Thread(Ping);
 
 			_workerPingThread.Start();

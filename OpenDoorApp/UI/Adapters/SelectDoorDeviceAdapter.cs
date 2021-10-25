@@ -16,24 +16,24 @@ namespace OpenDoorApp.UI.Adapters
 {
     public class SelectDoorDeviceAdapter : RecyclerView.Adapter
     {
-        private SelectDoorDeviceFragment _frag;
         private Action<int> _selectDevicePosition;
-        private List<string> pairedDevices;
+        public List<string> PairedDevices;
+        private Func<int> getSelectDevicePosition;
 
-        public SelectDoorDeviceAdapter(List<string> pairedDevices, Action<int> selectDevicePosition, SelectDoorDeviceFragment selectDoorDeviceFragment)
+        public SelectDoorDeviceAdapter(List<string> pairedDevices, Action<int> selectDevicePosition, Func<int> getSelectDevicePosition)
         {
-            _frag = selectDoorDeviceFragment;
+            this.PairedDevices = pairedDevices;
             _selectDevicePosition = selectDevicePosition;
-            this.pairedDevices = pairedDevices;
+            this.getSelectDevicePosition = getSelectDevicePosition;
         }
 
-        public override int ItemCount => pairedDevices?.Count ?? 0;
+        public override int ItemCount => PairedDevices?.Count ?? 0;
 
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
             if(holder is DeviceItemViewHolder deviceItemVH)
             {
-                deviceItemVH.Bind(pairedDevices[holder.AdapterPosition], holder.AdapterPosition == _frag.SelectedDevicePosition, UpdateList);
+                deviceItemVH.Bind(PairedDevices[holder.AdapterPosition], holder.AdapterPosition == getSelectDevicePosition.Invoke(), UpdateList);
             }
         }
 
