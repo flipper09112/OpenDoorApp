@@ -78,7 +78,7 @@ namespace OpenDoorApp
                 //myLabel.setText("No bluetooth adapter available");
             }
             
-            if (deviceSelected == string.Empty)
+            if (deviceSelected == string.Empty || deviceSelected == null)
             {
                 _onboardService.IsOnboarding = true;
                 return new FirstConnectDoorDeviceFragment();

@@ -16,6 +16,7 @@ using AndroidX.Core.App;
 using AndroidX.Core.Content;
 using AndroidX.RecyclerView.Widget;
 using Com.Airbnb.Lottie;
+using Java.Lang.Reflect;
 using OpenDoorApp.Helpers;
 using OpenDoorApp.Services.Natives;
 using OpenDoorApp.UI.Adapters;
@@ -40,6 +41,8 @@ namespace OpenDoorApp.UI.Fragments.Onboard
         private LottieAnimationView _lottie;
         private List<string> _pairedDevices;
         private SelectDoorDeviceAdapter _adapter;
+        private List<BluetoothDevice> _pairedDevicesBT;
+        private GetPairedDeviceStateReceiver _receiverPairedState;
 
         public int SelectedDevicePosition { get; private set; }
 
@@ -64,6 +67,7 @@ namespace OpenDoorApp.UI.Fragments.Onboard
             _devicesList.SetLayoutManager(new LinearLayoutManager(Context));
 
             _pairedDevices = new List<string>();
+            _pairedDevicesBT = new List<BluetoothDevice>();
 
             SelectedDevicePosition = -1;
 
@@ -77,6 +81,7 @@ namespace OpenDoorApp.UI.Fragments.Onboard
             CleanBindings();
 
             Activity.UnregisterReceiver(_receiver);
+            Activity.UnregisterReceiver(_receiverPairedState);
         }
 
         public override void OnResume()
@@ -84,18 +89,22 @@ namespace OpenDoorApp.UI.Fragments.Onboard
             base.OnResume();
 
             _receiver = _receiver ?? new GetBluetoothDevicesReceiver(AddDevice, StartSearch, EndSearch);
+            _receiverPairedState = _receiverPairedState ?? new GetPairedDeviceStateReceiver(ShowHomepage);
 
             SetUI();
             SetupBindings();
 
             // Register for broadcasts when a device is discovered.
             IntentFilter filter = new IntentFilter();
-
             filter.AddAction(BluetoothDevice.ActionFound);
             filter.AddAction(BluetoothAdapter.ActionDiscoveryStarted);
             filter.AddAction(BluetoothAdapter.ActionDiscoveryFinished);
 
+            IntentFilter filter2 = new IntentFilter();
+            filter2.AddAction(BluetoothDevice.ActionBondStateChanged);
+
             Activity.RegisterReceiver(_receiver, filter);
+            Activity.RegisterReceiver(_receiverPairedState, filter2);
 
             StartScan();
         }
@@ -147,19 +156,34 @@ namespace OpenDoorApp.UI.Fragments.Onboard
 
         private void NextBtnClick(object sender, EventArgs e)
         {
+            bool paired = PairDevice(_pairedDevicesBT[SelectedDevicePosition]);
+        }
+
+        public void ShowHomepage()
+        {
             Preferences.Set(HomepageFragment.LastDeviceSelected, _pairedDevices[SelectedDevicePosition]);
             FragmentsHelper.ShowFragment(Activity, new HomepageFragment());
         }
 
+        private bool PairDevice(BluetoothDevice device)
+        {
+            return device.CreateBond();
+        }
+
         public void AddDevice(BluetoothDevice bluetoothDevice)
         {
-            _pairedDevices.Add(bluetoothDevice.Name ?? bluetoothDevice.Address);
-            _adapter.PairedDevices = _pairedDevices;
-            _adapter.NotifyItemInserted(_pairedDevices.Count - 1);
+            if (!_pairedDevicesBT.Contains(bluetoothDevice))
+            {
+                _pairedDevicesBT.Add(bluetoothDevice);
+                _pairedDevices.Add(bluetoothDevice.Name ?? bluetoothDevice.Address);
+                _adapter.PairedDevices = _pairedDevices;
+                _adapter.NotifyItemInserted(_pairedDevices.Count - 1);
+            }
         }
 
         private void StartSearch()
         {
+            _pairedDevicesBT.Clear();
             _pairedDevices.Clear();
             _adapter.PairedDevices = _pairedDevices;
 
