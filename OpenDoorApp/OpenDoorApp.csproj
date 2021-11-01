@@ -78,6 +78,7 @@
     <Compile Include="Services\Implementatios\OnboardService.cs" />
     <Compile Include="Services\Interfaces\IOnboardService.cs" />
     <Compile Include="Services\Natives\GetBluetoothDevicesReceiver.cs" />
+    <Compile Include="Services\Natives\GetPairedDeviceStateReceiver.cs" />
     <Compile Include="UI\Activities\MainActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
