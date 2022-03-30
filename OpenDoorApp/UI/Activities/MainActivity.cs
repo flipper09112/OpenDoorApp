@@ -19,6 +19,9 @@ using Xamarin.Essentials;
 using Autofac;
 using OpenDoorApp.Services.Interfaces;
 using OpenDoorApp.UI.Fragments.Onboard;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
+using Microsoft.AppCenter;
 
 namespace OpenDoorApp
 {
@@ -37,6 +40,7 @@ namespace OpenDoorApp
         {
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
+            AppCenter.Start("67dfd7c4-f121-4a35-a0df-52178ce63e6c", typeof(Analytics), typeof(Crashes));
             SetContentView(Resource.Layout.activity_main);
 
             _toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
