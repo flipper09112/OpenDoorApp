@@ -14,7 +14,7 @@ namespace OpenDoorApp.Services.Interfaces
     public interface IBluetoothService
     {
         public string OpenCommand { get; }
-        void Ping(string deviceName, Action<bool> updateConnected, Action somethingWrong, Action<string> showReceivedData);
+        void Ping(Context context, string deviceName, Action<bool> updateConnected, Action somethingWrong, Action<string> showReceivedData);
         void Stop();
         void SendCommand(string openCommand);
     }

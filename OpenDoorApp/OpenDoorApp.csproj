@@ -41,6 +41,7 @@
     <EnableLLVM>false</EnableLLVM>
     <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
     <BundleAssemblies>false</BundleAssemblies>
+    <MandroidI18n />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -93,6 +94,7 @@
     <Compile Include="UI\Fragments\Onboard\SelectDoorDeviceFragment.cs" />
     <Compile Include="UI\Fragments\Onboard\TurnOnBluetoothFragment.cs" />
     <Compile Include="UI\ViewHolders\DeviceItemViewHolder.cs" />
+    <Compile Include="UI\Widget\SimpleAppWidget.cs" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\Lotties\enable_bluetooth_lottie.json" />
@@ -229,6 +231,27 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\SearchDevicesToPairFragment.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\simple_app_widget.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\xml\appwidgetprovider.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\ic_gate_widget.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\widget_bt_connected.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\widget_loading.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

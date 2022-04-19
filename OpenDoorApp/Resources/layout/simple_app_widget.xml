@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#c2c9d9"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="2dp"
+                android:src="@drawable/ic_gate_widget"
+                android:layout_weight="3"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/widget_title"
+                android:gravity="center"
+                android:autoSizeTextType="uniform"
+                android:maxLines="1"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:fontFamily="@font/arista_pro_bold"
+                android:textColor="@android:color/black"/>
+
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#55c2c9d9"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/connectButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="conectar"
+                android:fontFamily="@font/arista_pro_bold"
+                android:autoSizeTextType="uniform"
+                android:maxLines="1"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginBottom="2dp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

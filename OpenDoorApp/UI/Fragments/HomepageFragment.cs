@@ -77,7 +77,7 @@ namespace OpenDoorApp.UI.Fragments
 
         private void StartBTConnection()
         {
-            Task.Run(() => { _bluetoothService.Ping(Preferences.Get(LastDeviceSelected, string.Empty), UpdateConnectedInfo, SomethingWrong, ShowDataReceived); });
+            Task.Run(() => { _bluetoothService.Ping(Context, Preferences.Get(LastDeviceSelected, string.Empty), UpdateConnectedInfo, SomethingWrong, ShowDataReceived); });
         }
 
         private void SetupBindings()

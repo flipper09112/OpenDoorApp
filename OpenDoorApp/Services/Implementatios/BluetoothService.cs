@@ -9,6 +9,7 @@ using Android.Widget;
 using Java.Lang;
 using Java.Util;
 using OpenDoorApp.Services.Interfaces;
+using OpenDoorApp.UI.Widget;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,6 +32,7 @@ namespace OpenDoorApp.Services
         private Stream _mmOutputStream;
         private Stream _mmInputStream;
         private Thread _workerPingThread;
+        private Context _context;
         private string _deviceName;
         private Action<bool> _updateConnected;
         private Action _somethingWrongAction;
@@ -41,8 +43,9 @@ namespace OpenDoorApp.Services
         public string OpenCommand { get => "a"; }
         private string PingCommand { get => "p"; }
 
-		public void Ping(string deviceName, Action<bool> updateConnected, Action somethingWrongAction, Action<string> showDataReceived)
+		public void Ping(Context context, string deviceName, Action<bool> updateConnected, Action somethingWrongAction, Action<string> showDataReceived)
         {
+            _context = context;
 			_deviceName = deviceName;
 			_updateConnected = updateConnected;
 			_somethingWrongAction = somethingWrongAction;
@@ -100,10 +103,11 @@ namespace OpenDoorApp.Services
 					Log.Debug("BluetoothService", "Try connect");
 					_mmSocket.Connect();
 
+					SendBroadcast();
 					updateConnected.Invoke(true);
 				}
 				catch (RuntimeException ex) {
-					//Log.Debug("BluetoothService", ex.StackTrace);
+					Log.Debug("BluetoothService", ex.StackTrace);
 				}
 				catch (System.Exception e)
 				{
@@ -118,8 +122,14 @@ namespace OpenDoorApp.Services
 			_mmInputStream = _mmSocket.InputStream;
 		}
 
+        private void SendBroadcast()
+        {
+			Intent intent = new Intent(_context, typeof(SimpleAppWidget));
+			intent.SetAction(SimpleAppWidget.ACTION_CONNECTED);
+			_context.SendBroadcast(intent);
+		}
 
-		private void Server()
+        private void Server()
         {
 			while (!Thread.CurrentThread().IsInterrupted && !_stopWorker)
 			{
@@ -140,20 +150,28 @@ namespace OpenDoorApp.Services
 							_showDataReceived.Invoke(data);
 
 							if (_sendPing)
-                            {
+							{
 								_data = data;
 								_sendPing = false;
 							}
 
 							Console.WriteLine("BluetoothService", "Receive => " + data);
-							
+
 							_readBufferPosition = 0;
 						}
 					}
-				} 
-				catch (IOException ex) {
+				}
+				catch (Java.IO.IOException ex)
+				{
 					_stopWorker = true;
 					_somethingWrongAction?.Invoke();
+					Log.Debug("BluetoothService", ex.StackTrace);
+				}
+				catch (Java.Lang.NullPointerException ex)
+				{
+					/*_stopWorker = true;
+					_somethingWrongAction?.Invoke();*/
+					Log.Debug("BluetoothService", ex.StackTrace);
 				}
 			}
 		}
@@ -193,6 +211,7 @@ namespace OpenDoorApp.Services
 				{
 					//_somethingWrongAction?.Invoke();
 					//_stopWorker = true;
+					Log.Debug("BluetoothService", ex.StackTrace);
 				}
 			}
 		}
