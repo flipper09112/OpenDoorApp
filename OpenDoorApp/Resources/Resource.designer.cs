@@ -4285,6 +4285,15 @@ namespace OpenDoorApp
 			// aapt resource value: 0x7F070086
 			public const int tooltip_frame_light = 2131165318;
 			
+			// aapt resource value: 0x7F070087
+			public const int widget_corners_bg = 2131165319;
+			
+			// aapt resource value: 0x7F070088
+			public const int widget_corners_bottom_bg = 2131165320;
+			
+			// aapt resource value: 0x7F070089
+			public const int widget_preview = 2131165321;
+			
 			static Drawable()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();

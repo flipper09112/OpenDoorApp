@@ -80,6 +80,7 @@ namespace OpenDoorApp.Services
         {
 			_stopWorker = true;
 			_stopPingWorker = true;
+			SendBroadcastReset();
 		}
 
         private void FindBT(string deviceName)
@@ -101,6 +102,7 @@ namespace OpenDoorApp.Services
 				{
 					updateConnected.Invoke(false);
 					Log.Debug("BluetoothService", "Try connect");
+
 					_mmSocket.Connect();
 
 					SendBroadcast();
@@ -129,10 +131,20 @@ namespace OpenDoorApp.Services
 			_context.SendBroadcast(intent);
 		}
 
-        private void Server()
+		private void SendBroadcastReset()
+		{
+			Intent intent = new Intent(_context, typeof(SimpleAppWidget));
+			intent.SetAction(SimpleAppWidget.ACTION_UPDATE);
+			_context.SendBroadcast(intent);
+		}
+
+		private void Server()
         {
+			int maxCount = 10;
+			int count = 0;
 			while (!Thread.CurrentThread().IsInterrupted && !_stopWorker)
 			{
+
 				try
 				{
 					byte delimiter = 10; //This is the ASCII code for a newline character
@@ -163,15 +175,24 @@ namespace OpenDoorApp.Services
 				}
 				catch (Java.IO.IOException ex)
 				{
+					count++;
+
 					_stopWorker = true;
 					_somethingWrongAction?.Invoke();
+					SendBroadcastReset();
+
 					Log.Debug("BluetoothService", ex.StackTrace);
 				}
 				catch (Java.Lang.NullPointerException ex)
 				{
-					/*_stopWorker = true;
-					_somethingWrongAction?.Invoke();*/
+					count++;
 					Log.Debug("BluetoothService", ex.StackTrace);
+				}
+
+				if (count == maxCount)
+                {
+					_stopWorker = true;
+					SendBroadcastReset();
 				}
 			}
 		}

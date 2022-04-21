@@ -72,6 +72,10 @@ namespace OpenDoorApp.UI.Fragments
             base.OnPause();
             CleanBindings();
 
+        }
+
+        public override void OnDestroy()
+        {
             _bluetoothService.Stop();
         }
 

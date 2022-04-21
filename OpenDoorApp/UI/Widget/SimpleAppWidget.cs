@@ -64,6 +64,7 @@ namespace OpenDoorApp.UI.Widget
 
             if (ACTION_CONNECTING.Equals(intent.Action))
             {
+                _failTimes = 0;
                 // Construct the RemoteViews object
                 RemoteViews views = new RemoteViews(context.PackageName, Resource.Layout.widget_loading);
 
@@ -139,8 +140,8 @@ namespace OpenDoorApp.UI.Widget
                 int[] appWidgetIds = appWidgetManager.GetAppWidgetIds(appWidget);
 
                 Task.Run(async () => {
-                    await Task.Delay(10000);
-                    RestartLayout();
+                    await Task.Delay(3000);
+                    UpdateConnectedInfo(true);
                 });
 
                 foreach (int appWidgetId in appWidgetIds)
