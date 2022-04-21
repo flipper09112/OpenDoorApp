@@ -72,12 +72,16 @@ namespace OpenDoorApp.UI.Fragments
             base.OnPause();
             CleanBindings();
 
+        }
+
+        public override void OnDestroy()
+        {
             _bluetoothService.Stop();
         }
 
         private void StartBTConnection()
         {
-            Task.Run(() => { _bluetoothService.Ping(Preferences.Get(LastDeviceSelected, string.Empty), UpdateConnectedInfo, SomethingWrong, ShowDataReceived); });
+            Task.Run(() => { _bluetoothService.Ping(Context, Preferences.Get(LastDeviceSelected, string.Empty), UpdateConnectedInfo, SomethingWrong, ShowDataReceived); });
         }
 
         private void SetupBindings()
