@@ -2,4 +2,15 @@
     <string name="app_name">OpenDoor</string>
 	<string name="action_settings">Settings</string>
 	<string name="widget_title">Portao de casa</string>
+	<string name="car_open_door">Abrir Portão</string>
+	<string name="car_connecting">Conectando ao dispositivo…</string>
+	<string name="car_connected">Dispositivo conectado. O carro deve estar parado para abrir.</string>
+	<string name="car_disconnected">Dispositivo desconectado.</string>
+	<string name="car_no_device_configured">Nenhum dispositivo configurado. Configure um dispositivo no aplicativo.</string>
+	<string name="car_retry">Tentar Novamente</string>
+	<string name="car_opening_door">Abrindo o portão…</string>
+	<string name="car_connection_failed">Falha ao conectar ao dispositivo.</string>
+	<string name="car_error_generic">Erro: Tente novamente.</string>
+	<string name="car_error_opening_door">Erro ao abrir o portão.</string>
+	<string name="car_max_retries_exceeded">Tentativas esgotadas. Configure um novo dispositivo no aplicativo.</string>
 </resources>
