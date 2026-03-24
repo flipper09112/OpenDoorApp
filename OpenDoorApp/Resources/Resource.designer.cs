@@ -6032,67 +6032,85 @@ namespace OpenDoorApp
 			public const int car_connecting = 2131755040;
 			
 			// aapt resource value: 0x7F100021
-			public const int car_disconnected = 2131755041;
+			public const int car_connection_failed = 2131755041;
 			
 			// aapt resource value: 0x7F100022
-			public const int car_no_device_configured = 2131755042;
+			public const int car_disconnected = 2131755042;
 			
 			// aapt resource value: 0x7F100023
-			public const int car_open_door = 2131755043;
+			public const int car_error_generic = 2131755043;
 			
 			// aapt resource value: 0x7F100024
-			public const int character_counter_content_description = 2131755044;
+			public const int car_error_opening_door = 2131755044;
 			
 			// aapt resource value: 0x7F100025
-			public const int character_counter_pattern = 2131755045;
+			public const int car_max_retries_exceeded = 2131755045;
 			
 			// aapt resource value: 0x7F100026
-			public const int copy_toast_msg = 2131755046;
-			
-			// aapt resource value: 0x7F100027
-			public const int fab_transformation_scrim_behavior = 2131755047;
+			public const int car_no_device_configured = 2131755046;
 			
 			// aapt resource value: 0x7F100028
-			public const int fab_transformation_sheet_behavior = 2131755048;
+			public const int car_opening_door = 2131755048;
+			
+			// aapt resource value: 0x7F100027
+			public const int car_open_door = 2131755047;
 			
 			// aapt resource value: 0x7F100029
-			public const int fallback_menu_item_copy_link = 2131755049;
+			public const int car_retry = 2131755049;
 			
 			// aapt resource value: 0x7F10002A
-			public const int fallback_menu_item_open_in_browser = 2131755050;
+			public const int character_counter_content_description = 2131755050;
 			
 			// aapt resource value: 0x7F10002B
-			public const int fallback_menu_item_share_link = 2131755051;
+			public const int character_counter_pattern = 2131755051;
 			
 			// aapt resource value: 0x7F10002C
-			public const int hide_bottom_view_on_scroll_behavior = 2131755052;
+			public const int copy_toast_msg = 2131755052;
 			
 			// aapt resource value: 0x7F10002D
-			public const int mtrl_chip_close_icon_content_description = 2131755053;
+			public const int fab_transformation_scrim_behavior = 2131755053;
 			
 			// aapt resource value: 0x7F10002E
-			public const int password_toggle_content_description = 2131755054;
+			public const int fab_transformation_sheet_behavior = 2131755054;
 			
 			// aapt resource value: 0x7F10002F
-			public const int path_password_eye = 2131755055;
+			public const int fallback_menu_item_copy_link = 2131755055;
 			
 			// aapt resource value: 0x7F100030
-			public const int path_password_eye_mask_strike_through = 2131755056;
+			public const int fallback_menu_item_open_in_browser = 2131755056;
 			
 			// aapt resource value: 0x7F100031
-			public const int path_password_eye_mask_visible = 2131755057;
+			public const int fallback_menu_item_share_link = 2131755057;
 			
 			// aapt resource value: 0x7F100032
-			public const int path_password_strike_through = 2131755058;
+			public const int hide_bottom_view_on_scroll_behavior = 2131755058;
 			
 			// aapt resource value: 0x7F100033
-			public const int search_menu_title = 2131755059;
+			public const int mtrl_chip_close_icon_content_description = 2131755059;
 			
 			// aapt resource value: 0x7F100034
-			public const int status_bar_notification_info_overflow = 2131755060;
+			public const int password_toggle_content_description = 2131755060;
 			
 			// aapt resource value: 0x7F100035
-			public const int widget_title = 2131755061;
+			public const int path_password_eye = 2131755061;
+			
+			// aapt resource value: 0x7F100036
+			public const int path_password_eye_mask_strike_through = 2131755062;
+			
+			// aapt resource value: 0x7F100037
+			public const int path_password_eye_mask_visible = 2131755063;
+			
+			// aapt resource value: 0x7F100038
+			public const int path_password_strike_through = 2131755064;
+			
+			// aapt resource value: 0x7F100039
+			public const int search_menu_title = 2131755065;
+			
+			// aapt resource value: 0x7F10003A
+			public const int status_bar_notification_info_overflow = 2131755066;
+			
+			// aapt resource value: 0x7F10003B
+			public const int widget_title = 2131755067;
 			
 			static String()
 			{
