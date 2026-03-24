@@ -8,7 +8,9 @@
 		android:roundIcon="@mipmap/ic_launcher_round" 
 		android:supportsRtl="true" 
 		android:theme="@style/AppTheme">
-		
+		<meta-data
+			android:name="com.google.android.gms.car.application"
+			android:resource="@xml/automotive_app_desc" />
 	</application>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.BLUETOOTH" />
