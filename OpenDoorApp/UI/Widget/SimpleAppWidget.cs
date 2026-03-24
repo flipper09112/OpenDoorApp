@@ -17,7 +17,7 @@ using Xamarin.Essentials;
 
 namespace OpenDoorApp.UI.Widget
 {
-    [BroadcastReceiver(Label = "SimpleAppWidget")]
+    [BroadcastReceiver(Label = "SimpleAppWidget", Exported = true)]
     [IntentFilter(new string[] { "android.appwidget.action.APPWIDGET_UPDATE" })]
     [MetaData("android.appwidget.provider", Resource = "@xml/appwidgetprovider")]
     public class SimpleAppWidget : AppWidgetProvider
@@ -48,7 +48,11 @@ namespace OpenDoorApp.UI.Widget
             Intent intent = new Intent(context, typeof(SimpleAppWidget));
             intent.SetAction(ACTION_CONNECTING);
             // And this time we are sending a broadcast with getBroadcast
-            PendingIntent pendingIntent = PendingIntent.GetBroadcast(context, 0, intent, PendingIntentFlags.UpdateCurrent);
+            PendingIntent pendingIntent = PendingIntent.GetBroadcast(
+                context,
+                0,
+                intent,
+                PendingIntentFlags.UpdateCurrent | PendingIntentFlags.Immutable);
 
             views.SetOnClickPendingIntent(Resource.Id.connectButton, pendingIntent);
 
@@ -106,7 +110,11 @@ namespace OpenDoorApp.UI.Widget
                 intent.SetAction(ACTION_OPEN_DOOR);
 
                 // And this time we are sending a broadcast with getBroadcast
-                PendingIntent pendingIntent = PendingIntent.GetBroadcast(context, 0, intent, PendingIntentFlags.UpdateCurrent);
+                PendingIntent pendingIntent = PendingIntent.GetBroadcast(
+                    context,
+                    0,
+                    intent,
+                    PendingIntentFlags.UpdateCurrent | PendingIntentFlags.Immutable);
                 views.SetOnClickPendingIntent(Resource.Id.connectButton, pendingIntent);
 
                 // This time we dont have widgetId. Reaching our widget with that way.

@@ -25,7 +25,13 @@ using Microsoft.AppCenter;
 
 namespace OpenDoorApp
 {
-    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true, ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
+    [Activity(
+        Name = "com.companyname.opendoorapp.MainActivity",
+        Label = "@string/app_name",
+        Theme = "@style/AppTheme.NoActionBar",
+        MainLauncher = true,
+        Exported = true,
+        ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
     public class MainActivity : AppCompatActivity
     {
         private FrameLayout _frame;
